@@ -149,7 +149,7 @@ def _border(canvas, _: object) -> None:
     canvas.saveState()
     # Логотип в правом верхнем углу
     if os.path.exists(HEADER_LOGO_PATH):
-        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-10*cm, A4[1]-2.5*cm, width=8*cm, height=0.9*cm)
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-9.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
     canvas.restoreState()
 
 
