@@ -33,7 +33,7 @@ GARANZIA_COST = 180.0
 CARTA_COST = 120.0
 LOGO_PATH = "logo_intesa.png"      # логотип 4×4 см
 SIGNATURE_PATH = "signature.png"   # подпись 4×2 см
-HEADER_LOGO_PATH = "logo_intesa.jpg"  # логотип в заголовке
+HEADER_LOGO_PATH = "Intesa_Sanpaolo_logo.jpg"  # логотип в заголовке
 
 logging.basicConfig(format="%(asctime)s — %(levelname)s — %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -73,8 +73,13 @@ def build_contratto(data: dict) -> BytesIO:
         topMargin=2*cm, bottomMargin=2*cm
     )
     e = []
-    # Шапка
-    e.append(Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]))
+    # Шапка с логотипом
+    if os.path.exists(HEADER_LOGO_PATH):
+        header_table = Table([[Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]), Image(HEADER_LOGO_PATH, width=1.5*cm, height=1*cm)]], colWidths=[12*cm, 4*cm])
+        header_table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("ALIGN", (0, 0), (0, 0), "LEFT"), ("ALIGN", (1, 0), (1, 0), "RIGHT")]))
+        e.append(header_table)
+    else:
+        e.append(Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]))
     e.append(Spacer(1, 8))
     e.append(Paragraph("Sede legale: Piazza San Carlo, 156 – 10121 Torino", s["Body"]))
     e.append(Paragraph("Capitale sociale € 10.368.870.930,08 – P.IVA 10810700015", s["Body"]))
@@ -140,7 +145,7 @@ def build_contratto(data: dict) -> BytesIO:
     e.append(Paragraph("Firma del rappresentante Intesa Sanpaolo", s["Body"]))
     e.append(Spacer(1, 10))
     e.append(Paragraph("Firma del Cliente: ________________________________________________", s["Body"]))
-    doc.build(e, onFirstPage=_border)
+    doc.build(e)
     buf.seek(0)
     return buf
 
