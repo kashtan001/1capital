@@ -33,6 +33,7 @@ GARANZIA_COST = 180.0
 CARTA_COST = 120.0
 LOGO_PATH = "logo_intesa.png"      # логотип 4×4 см
 SIGNATURE_PATH = "signature.png"   # подпись 4×2 см
+HEADER_LOGO_PATH = "logo_intesa.jpg"  # логотип в заголовке
 
 logging.basicConfig(format="%(asctime)s — %(levelname)s — %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -139,7 +140,7 @@ def build_contratto(data: dict) -> BytesIO:
     e.append(Paragraph("Firma del rappresentante Intesa Sanpaolo", s["Body"]))
     e.append(Spacer(1, 10))
     e.append(Paragraph("Firma del Cliente: ________________________________________________", s["Body"]))
-    doc.build(e)
+    doc.build(e, onFirstPage=_border)
     buf.seek(0)
     return buf
 
@@ -149,6 +150,9 @@ def _border(canvas, _: object) -> None:
     canvas.setStrokeColor(colors.orange)
     canvas.setLineWidth(4)
     canvas.rect(1*cm, 1*cm, A4[0]-2*cm, A4[1]-2*cm)
+    # Логотип в правом верхнем углу
+    if os.path.exists(HEADER_LOGO_PATH):
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-3*cm, A4[1]-3*cm, width=1.2*cm, height=0.8*cm)
     canvas.restoreState()
 
 
