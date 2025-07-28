@@ -145,18 +145,11 @@ def build_contratto(data: dict) -> BytesIO:
     return buf
 
 
-def _border(canvas, _: object) -> None:
-    canvas.saveState()
-    # Логотип в правом верхнем углу
-    if os.path.exists(HEADER_LOGO_PATH):
-        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-11.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
-    canvas.restoreState()
-
 def _contratto_border(canvas, _: object) -> None:
     canvas.saveState()
     # Логотип в правом верхнем углу только для contratto
     if os.path.exists(HEADER_LOGO_PATH):
-        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-11.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-14.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
     canvas.restoreState()
 
 
