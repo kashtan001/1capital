@@ -58,7 +58,7 @@ def monthly_payment(amount: float, months: int, annual_rate: float) -> float:
 
 def _styles():
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name="Header", alignment=TA_CENTER, fontSize=14, fontName="Helvetica-Bold"))
+    styles.add(ParagraphStyle(name="Header", alignment=TA_CENTER, fontSize=14, fontName="Helvetica-Bold", leading=18))
     styles.add(ParagraphStyle(name="Body", fontSize=11, leading=15))
     return styles
 
@@ -74,6 +74,7 @@ def build_contratto(data: dict) -> BytesIO:
     e = []
     # Шапка
     e.append(Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]))
+    e.append(Spacer(1, 8))
     e.append(Paragraph("Sede legale: Piazza San Carlo, 156 – 10121 Torino", s["Body"]))
     e.append(Paragraph("Capitale sociale € 10.368.870.930,08 – P.IVA 10810700015", s["Body"]))
     e.append(Paragraph("Registro Imprese di Torino – ABI 03069.9", s["Body"]))
@@ -162,9 +163,9 @@ def _letter_common(subject: str, body: str) -> BytesIO:
         elems.append(Image(LOGO_PATH, width=4*cm, height=4*cm))
         elems.append(Spacer(1, 8))
     elems.append(Paragraph("Ufficio Crediti Clientela Privata", s["Header"]))
-    elems.append(Spacer(1, 10))
+    elems.append(Spacer(1, 8))
     elems.append(Paragraph(f"<b>Oggetto:</b> {subject}", s["Body"]))
-    elems.append(Spacer(1, 14))
+    elems.append(Spacer(1, 12))
     elems.append(Paragraph(body, s["Body"]))
     elems.append(Spacer(1, 24))
     if os.path.exists(SIGNATURE_PATH):
