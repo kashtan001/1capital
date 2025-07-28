@@ -140,7 +140,7 @@ def build_contratto(data: dict) -> BytesIO:
     e.append(Paragraph("Firma del rappresentante Intesa Sanpaolo", s["Body"]))
     e.append(Spacer(1, 10))
     e.append(Paragraph("Firma del Cliente: ________________________________________________", s["Body"]))
-    doc.build(e, onFirstPage=_border)
+    doc.build(e, onFirstPage=_contratto_border)
     buf.seek(0)
     return buf
 
@@ -149,7 +149,14 @@ def _border(canvas, _: object) -> None:
     canvas.saveState()
     # Логотип в правом верхнем углу
     if os.path.exists(HEADER_LOGO_PATH):
-        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-9.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-11.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
+    canvas.restoreState()
+
+def _contratto_border(canvas, _: object) -> None:
+    canvas.saveState()
+    # Логотип в правом верхнем углу только для contratto
+    if os.path.exists(HEADER_LOGO_PATH):
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-11.2*cm, A4[1]-2*cm, width=6.8*cm, height=0.9*cm)
     canvas.restoreState()
 
 
@@ -173,7 +180,7 @@ def _letter_common(subject: str, body: str) -> BytesIO:
         elems.append(Image(SIGNATURE_PATH, width=4*cm, height=2*cm))
         elems.append(Spacer(1, 4))
         elems.append(Paragraph("Responsabile Ufficio Crediti Clientela Privata", s["Body"]))
-    doc.build(elems, onFirstPage=_border)
+    doc.build(elems)
     buf.seek(0)
     return buf
 
