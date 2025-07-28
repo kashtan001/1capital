@@ -147,12 +147,9 @@ def build_contratto(data: dict) -> BytesIO:
 
 def _border(canvas, _: object) -> None:
     canvas.saveState()
-    canvas.setStrokeColor(colors.orange)
-    canvas.setLineWidth(4)
-    canvas.rect(1*cm, 1*cm, A4[0]-2*cm, A4[1]-2*cm)
     # Логотип в правом верхнем углу
     if os.path.exists(HEADER_LOGO_PATH):
-        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-5*cm, A4[1]-3*cm, width=4*cm, height=0.45*cm)
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-10*cm, A4[1]-2.5*cm, width=8*cm, height=0.9*cm)
     canvas.restoreState()
 
 
