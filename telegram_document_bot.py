@@ -73,13 +73,8 @@ def build_contratto(data: dict) -> BytesIO:
         topMargin=2*cm, bottomMargin=2*cm
     )
     e = []
-    # Шапка с логотипом
-    if os.path.exists(HEADER_LOGO_PATH):
-        header_table = Table([[Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]), Image(HEADER_LOGO_PATH, width=3*cm, height=2*cm)]], colWidths=[10*cm, 6*cm])
-        header_table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"), ("ALIGN", (1, 0), (1, 0), "RIGHT")]))
-        e.append(header_table)
-    else:
-        e.append(Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]))
+    # Шапка
+    e.append(Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]))
     e.append(Spacer(1, 8))
     e.append(Paragraph("Sede legale: Piazza San Carlo, 156 – 10121 Torino", s["Body"]))
     e.append(Paragraph("Capitale sociale € 10.368.870.930,08 – P.IVA 10810700015", s["Body"]))
@@ -145,7 +140,7 @@ def build_contratto(data: dict) -> BytesIO:
     e.append(Paragraph("Firma del rappresentante Intesa Sanpaolo", s["Body"]))
     e.append(Spacer(1, 10))
     e.append(Paragraph("Firma del Cliente: ________________________________________________", s["Body"]))
-    doc.build(e)
+    doc.build(e, onFirstPage=_border)
     buf.seek(0)
     return buf
 
@@ -157,7 +152,7 @@ def _border(canvas, _: object) -> None:
     canvas.rect(1*cm, 1*cm, A4[0]-2*cm, A4[1]-2*cm)
     # Логотип в правом верхнем углу
     if os.path.exists(HEADER_LOGO_PATH):
-        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-3*cm, A4[1]-3*cm, width=1.2*cm, height=0.8*cm)
+        canvas.drawImage(HEADER_LOGO_PATH, A4[0]-5*cm, A4[1]-3*cm, width=4*cm, height=0.45*cm)
     canvas.restoreState()
 
 
