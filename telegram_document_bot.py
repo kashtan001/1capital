@@ -75,8 +75,8 @@ def build_contratto(data: dict) -> BytesIO:
     e = []
     # Шапка с логотипом
     if os.path.exists(HEADER_LOGO_PATH):
-        header_table = Table([[Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]), Image(HEADER_LOGO_PATH, width=1.5*cm, height=1*cm)]], colWidths=[12*cm, 4*cm])
-        header_table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("ALIGN", (0, 0), (0, 0), "LEFT"), ("ALIGN", (1, 0), (1, 0), "RIGHT")]))
+        header_table = Table([[Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]), Image(HEADER_LOGO_PATH, width=3*cm, height=2*cm)]], colWidths=[10*cm, 6*cm])
+        header_table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("ALIGN", (0, 0), (0, 0), "CENTER"), ("ALIGN", (1, 0), (1, 0), "RIGHT")]))
         e.append(header_table)
     else:
         e.append(Paragraph("Intesa Sanpaolo S.p.A.", s["Header"]))
