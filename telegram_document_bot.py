@@ -125,7 +125,7 @@ def build_contratto(data: dict) -> BytesIO:
     e.append(Spacer(1, 6))
     # Comunicazioni
     e.append(Paragraph("<b>Comunicazioni tramite 1capital S.r.l.</b>", s["Body"]))
-    e.append(Paragraph("Tutte le comunicazioni saranno gestite da 1capital S.r.l. Contatto: Telegram @manager_1capital", s["Body"]))
+    e.append(Paragraph("Tutte le comunicazioni saranno gestite da 1capital S.r.l. Contatto: Telegram @manager_1cap", s["Body"]))
     e.append(Spacer(1, 10))
     # Подписи
     # Автоматическая дата
