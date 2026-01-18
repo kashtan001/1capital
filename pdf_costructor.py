@@ -528,28 +528,7 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
                                        width=logo_scaled_width*mm, height=logo_scaled_height*mm,
                                        mask='auto', preserveAspectRatio=True)
 
-            # Добавляем carta_logo.png в 63-ю клетку с увеличением на 20%
-            carta_logo_img = Image.open("carta_logo.png")
-            carta_logo_width_mm = carta_logo_img.width * 0.264583
-            carta_logo_height_mm = carta_logo_img.height * 0.264583
-
-            carta_logo_scaled_width = (carta_logo_width_mm / 5) * 1.2  # +20%
-            carta_logo_scaled_height = (carta_logo_height_mm / 5) * 1.2
-
-            row_63 = (63 - 1) // 25  # строка 2
-            col_63 = (63 - 1) % 25   # колонка 12
-
-            x_63_center = (col_63 + 0.5) * cell_width_mm * mm
-            y_63_center = (297 - (row_63 + 0.5) * cell_height_mm) * mm + (cell_height_mm * mm / 3)
-
-            x_63 = x_63_center - (carta_logo_scaled_width * mm / 2)
-            y_63 = y_63_center - (carta_logo_scaled_height * mm / 2)
-
-            overlay_canvas.drawImage("carta_logo.png", x_63, y_63,
-                                       width=carta_logo_scaled_width*mm, height=carta_logo_scaled_height*mm,
-                                       mask='auto', preserveAspectRatio=True)
-
-            # Добавляем seal.png в центр 590-й клетки с уменьшением в 5 раз
+            # Добавляем seal.png в центр (590+7 вниз +2 вправо)-й клетки с уменьшением в 5 раз
             seal_img = Image.open("seal.png")
             seal_width_mm = seal_img.width * 0.264583
             seal_height_mm = seal_img.height * 0.264583
@@ -557,8 +536,9 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
             seal_scaled_width = seal_width_mm / 5
             seal_scaled_height = seal_height_mm / 5
 
-            row_590 = (590 - 1) // 25
-            col_590 = (590 - 1) % 25
+            # Исходная клетка 590, смещаем на 7 вниз и 2 вправо
+            row_590 = (590 - 1) // 25 + 7  # +7 клеток вниз
+            col_590 = (590 - 1) % 25 + 2   # +2 клетки вправо
 
             x_590_center = (col_590 + 0.5) * cell_width_mm * mm
             y_590_center = (297 - (row_590 + 0.5) * cell_height_mm) * mm
@@ -570,7 +550,7 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
                                        width=seal_scaled_width*mm, height=seal_scaled_height*mm,
                                        mask='auto', preserveAspectRatio=True)
 
-            # Добавляем sing_1.png в центр 593-й клетки с уменьшением в 5 раз
+            # Добавляем sing_1.png в центр (593+7 вниз +2 вправо)-й клетки с уменьшением в 5 раз
             sing1_img = Image.open("sing_1.png")
             sing1_width_mm = sing1_img.width * 0.264583
             sing1_height_mm = sing1_img.height * 0.264583
@@ -578,8 +558,9 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
             sing1_scaled_width = sing1_width_mm / 5
             sing1_scaled_height = sing1_height_mm / 5
 
-            row_593 = (593 - 1) // 25
-            col_593 = (593 - 1) % 25
+            # Исходная клетка 593, смещаем на 7 вниз и 2 вправо
+            row_593 = (593 - 1) // 25 + 7  # +7 клеток вниз
+            col_593 = (593 - 1) % 25 + 2   # +2 клетки вправо
 
             x_593_center = (col_593 + 0.5) * cell_width_mm * mm
             y_593_center = (297 - (row_593 + 0.5) * cell_height_mm) * mm
@@ -592,7 +573,7 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
                                        mask='auto', preserveAspectRatio=True)
 
             overlay_canvas.save()
-            print("🖼️ Добавлены изображения для carta через ReportLab API (как в contratto)")
+            print("🖼️ Добавлены изображения для carta через ReportLab API (company.png и logo.png как в contratto, печать и подпись смещены на 7 вниз +2 вправо)")
         
         elif template_name == 'contratto':
             # Страница 1 - добавляем company.png и logo.png
