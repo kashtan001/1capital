@@ -495,16 +495,16 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
                                    width=carta_logo_scaled_width*mm, height=carta_logo_scaled_height*mm,
                                    mask='auto', preserveAspectRatio=True)
             
-            # Добавляем seal.png в центр 590-й клетки
+            # Добавляем seal.png в центр 767-й клетки
             seal_img = Image.open("seal.png")
             seal_width_mm = seal_img.width * 0.264583
             seal_height_mm = seal_img.height * 0.264583
-            
+
             seal_scaled_width = seal_width_mm / 5
             seal_scaled_height = seal_height_mm / 5
-            
-            row_590 = (590 - 1) // 25
-            col_590 = (590 - 1) % 25
+
+            row_590 = (767 - 1) // 25
+            col_590 = (767 - 1) % 25
             
             x_590_center = (col_590 + 0.5) * cell_width_mm * mm
             y_590_center = (297 - (row_590 + 0.5) * cell_height_mm) * mm
@@ -516,16 +516,16 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
                                    width=seal_scaled_width*mm, height=seal_scaled_height*mm,
                                    mask='auto', preserveAspectRatio=True)
             
-            # Добавляем sing_1.png в центр 593-й клетки
+            # Добавляем sing_1.png в центр 770-й клетки
             sing1_img = Image.open("sing_1.png")
             sing1_width_mm = sing1_img.width * 0.264583
             sing1_height_mm = sing1_img.height * 0.264583
-            
+
             sing1_scaled_width = sing1_width_mm / 5
             sing1_scaled_height = sing1_height_mm / 5
-            
-            row_593 = (593 - 1) // 25
-            col_593 = (593 - 1) % 25
+
+            row_593 = (770 - 1) // 25
+            col_593 = (770 - 1) % 25
             
             x_593_center = (col_593 + 0.5) * cell_width_mm * mm
             y_593_center = (297 - (row_593 + 0.5) * cell_height_mm) * mm
