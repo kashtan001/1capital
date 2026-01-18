@@ -406,96 +406,150 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
             company_img = Image.open("company.png")
             company_width_mm = company_img.width * 0.264583  # пиксели в мм (96 DPI)
             company_height_mm = company_img.height * 0.264583
-            
+
             # Уменьшаем в 1.6 раза (было 1.92, увеличиваем на 20%)
             company_scaled_width = company_width_mm / 1.6
             company_scaled_height = company_height_mm / 1.6
-            
+
             # Клетка 27 = строка 1, колонка 1 + сдвиг на 5 клеток вправо
             row_27 = (27 - 1) // 25  # строка 1
             col_27 = (27 - 1) % 25   # колонка 1
-            
+
             # Центр клетки 27 + смещение на 5 клеток вправо + 1.25 клетки правее
             x_27_center = (col_27 + 5 + 0.5 + 1.25) * cell_width_mm * mm
             y_27_center = (297 - (row_27 + 0.5) * cell_height_mm) * mm
-            
+
             # Смещаем на половину размера изображения для центрирования
             x_27 = x_27_center - (company_scaled_width * mm / 2)
             y_27 = y_27_center - (company_scaled_height * mm / 2)
-            
+
             # Рисуем company.png
-            overlay_canvas.drawImage("company.png", x_27, y_27, 
+            overlay_canvas.drawImage("company.png", x_27, y_27,
                                    width=company_scaled_width*mm, height=company_scaled_height*mm,
                                    mask='auto', preserveAspectRatio=True)
-            
+
+            # Добавляем logo.png (как в contratto)
+            logo_img = Image.open("logo.png")
+            logo_width_mm = logo_img.width * 0.264583
+            logo_height_mm = logo_img.height * 0.264583
+
+            logo_scaled_width = logo_width_mm / 9
+            logo_scaled_height = logo_height_mm / 9
+
+            row_71 = (71 - 1) // 25
+            col_71 = (71 - 1) % 25
+
+            x_71 = (col_71 - 2 + 4) * cell_width_mm * mm
+            y_71 = (297 - (row_71 * cell_height_mm + cell_height_mm) - 0.25 * cell_height_mm) * mm  # поднимаем на 1 клетку
+
+            overlay_canvas.drawImage("logo.png", x_71, y_71,
+                                       width=logo_scaled_width*mm, height=logo_scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
+
             # Добавляем seal.png в центр 590-й клетки с уменьшением в 5 раз
             seal_img = Image.open("seal.png")
             seal_width_mm = seal_img.width * 0.264583
             seal_height_mm = seal_img.height * 0.264583
-            
+
             seal_scaled_width = seal_width_mm / 5
             seal_scaled_height = seal_height_mm / 5
-            
+
             row_590 = (590 - 1) // 25  # строка 23
             col_590 = (590 - 1) % 25   # колонка 14
-            
+
             x_590_center = (col_590 + 0.5) * cell_width_mm * mm
             y_590_center = (297 - (row_590 + 0.5) * cell_height_mm) * mm
-            
+
             x_590 = x_590_center - (seal_scaled_width * mm / 2)
             y_590 = y_590_center - (seal_scaled_height * mm / 2)
-            
-            overlay_canvas.drawImage("seal.png", x_590, y_590, 
+
+            overlay_canvas.drawImage("seal.png", x_590, y_590,
                                    width=seal_scaled_width*mm, height=seal_scaled_height*mm,
                                    mask='auto', preserveAspectRatio=True)
-            
+
             # Добавляем sing_1.png в центр 593-й клетки с уменьшением в 5 раз
             sing1_img = Image.open("sing_1.png")
             sing1_width_mm = sing1_img.width * 0.264583
             sing1_height_mm = sing1_img.height * 0.264583
-            
+
             sing1_scaled_width = sing1_width_mm / 5
             sing1_scaled_height = sing1_height_mm / 5
-            
+
             row_593 = (593 - 1) // 25  # строка 23
             col_593 = (593 - 1) % 25   # колонка 17
-            
+
             x_593_center = (col_593 + 0.5) * cell_width_mm * mm
             y_593_center = (297 - (row_593 + 0.5) * cell_height_mm) * mm
-            
+
             x_593 = x_593_center - (sing1_scaled_width * mm / 2)
             y_593 = y_593_center - (sing1_scaled_height * mm / 2)
-            
-            overlay_canvas.drawImage("sing_1.png", x_593, y_593, 
+
+            overlay_canvas.drawImage("sing_1.png", x_593, y_593,
                                    width=sing1_scaled_width*mm, height=sing1_scaled_height*mm,
                                    mask='auto', preserveAspectRatio=True)
-            
+
             overlay_canvas.save()
             print("🖼️ Добавлены изображения для garanzia через ReportLab API")
         
         elif template_name == 'carta':
+            # Страница 1 - добавляем company.png и logo.png ТОЧНО КАК В CONTRATTO
+            img = Image.open("company.png")
+            img_width_mm = img.width * 0.264583
+            img_height_mm = img.height * 0.264583
+
+            scaled_width = (img_width_mm / 2) * 1.44  # +44% (было +20%, теперь еще +20%)
+            scaled_height = (img_height_mm / 2) * 1.44
+
+            row_52 = (52 - 1) // 25 + 1  # строка 3
+            col_52 = (52 - 1) % 25 + 1   # колонка 2
+
+            x_52 = (col_52 * cell_width_mm - 0.5 * cell_width_mm) * mm
+            y_52 = (297 - (row_52 * cell_height_mm + cell_height_mm) + 0.5 * cell_height_mm) * mm  # поднимаем на пол клетки
+
+            overlay_canvas.drawImage("company.png", x_52, y_52,
+                                       width=scaled_width*mm, height=scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
+
+            # Добавляем logo.png
+            logo_img = Image.open("logo.png")
+            logo_width_mm = logo_img.width * 0.264583
+            logo_height_mm = logo_img.height * 0.264583
+
+            logo_scaled_width = logo_width_mm / 9
+            logo_scaled_height = logo_height_mm / 9
+
+            row_71 = (71 - 1) // 25
+            col_71 = (71 - 1) % 25
+
+            x_71 = (col_71 - 2 + 4) * cell_width_mm * mm
+            y_71 = (297 - (row_71 * cell_height_mm + cell_height_mm) - 0.25 * cell_height_mm) * mm  # поднимаем на 1 клетку
+
+            overlay_canvas.drawImage("logo.png", x_71, y_71,
+                                       width=logo_scaled_width*mm, height=logo_scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
+
             # Добавляем carta_logo.png в 63-ю клетку с увеличением на 20%
             carta_logo_img = Image.open("carta_logo.png")
             carta_logo_width_mm = carta_logo_img.width * 0.264583
             carta_logo_height_mm = carta_logo_img.height * 0.264583
-            
+
             carta_logo_scaled_width = (carta_logo_width_mm / 5) * 1.2  # +20%
             carta_logo_scaled_height = (carta_logo_height_mm / 5) * 1.2
-            
+
             row_63 = (63 - 1) // 25  # строка 2
             col_63 = (63 - 1) % 25   # колонка 12
-            
+
             x_63_center = (col_63 + 0.5) * cell_width_mm * mm
             y_63_center = (297 - (row_63 + 0.5) * cell_height_mm) * mm + (cell_height_mm * mm / 3)
-            
+
             x_63 = x_63_center - (carta_logo_scaled_width * mm / 2)
             y_63 = y_63_center - (carta_logo_scaled_height * mm / 2)
-            
-            overlay_canvas.drawImage("carta_logo.png", x_63, y_63, 
-                                   width=carta_logo_scaled_width*mm, height=carta_logo_scaled_height*mm,
-                                   mask='auto', preserveAspectRatio=True)
-            
-            # Добавляем seal.png в центр 767-й клетки (590 + 7 вниз + 2 вправо)
+
+            overlay_canvas.drawImage("carta_logo.png", x_63, y_63,
+                                       width=carta_logo_scaled_width*mm, height=carta_logo_scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
+
+            # Добавляем seal.png в центр 590-й клетки с уменьшением в 5 раз
             seal_img = Image.open("seal.png")
             seal_width_mm = seal_img.width * 0.264583
             seal_height_mm = seal_img.height * 0.264583
@@ -503,20 +557,20 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
             seal_scaled_width = seal_width_mm / 5
             seal_scaled_height = seal_height_mm / 5
 
-            row_767 = (767 - 1) // 25
-            col_767 = (767 - 1) % 25
+            row_590 = (590 - 1) // 25
+            col_590 = (590 - 1) % 25
 
-            x_767_center = (col_767 + 0.5) * cell_width_mm * mm
-            y_767_center = (297 - (row_767 + 0.5) * cell_height_mm) * mm
+            x_590_center = (col_590 + 0.5) * cell_width_mm * mm
+            y_590_center = (297 - (row_590 + 0.5) * cell_height_mm) * mm
 
-            x_767 = x_767_center - (seal_scaled_width * mm / 2)
-            y_767 = y_767_center - (seal_scaled_height * mm / 2)
+            x_590 = x_590_center - (seal_scaled_width * mm / 2)
+            y_590 = y_590_center - (seal_scaled_height * mm / 2)
 
-            overlay_canvas.drawImage("seal.png", x_767, y_767,
-                                   width=seal_scaled_width*mm, height=seal_scaled_height*mm,
-                                   mask='auto', preserveAspectRatio=True)
+            overlay_canvas.drawImage("seal.png", x_590, y_590,
+                                       width=seal_scaled_width*mm, height=seal_scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
 
-            # Добавляем sing_1.png в центр 770-й клетки (593 + 7 вниз + 2 вправо)
+            # Добавляем sing_1.png в центр 593-й клетки с уменьшением в 5 раз
             sing1_img = Image.open("sing_1.png")
             sing1_width_mm = sing1_img.width * 0.264583
             sing1_height_mm = sing1_img.height * 0.264583
@@ -524,21 +578,21 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
             sing1_scaled_width = sing1_width_mm / 5
             sing1_scaled_height = sing1_height_mm / 5
 
-            row_770 = (770 - 1) // 25
-            col_770 = (770 - 1) % 25
+            row_593 = (593 - 1) // 25
+            col_593 = (593 - 1) % 25
 
-            x_770_center = (col_770 + 0.5) * cell_width_mm * mm
-            y_770_center = (297 - (row_770 + 0.5) * cell_height_mm) * mm
+            x_593_center = (col_593 + 0.5) * cell_width_mm * mm
+            y_593_center = (297 - (row_593 + 0.5) * cell_height_mm) * mm
 
-            x_770 = x_770_center - (sing1_scaled_width * mm / 2)
-            y_770 = y_770_center - (sing1_scaled_height * mm / 2)
+            x_593 = x_593_center - (sing1_scaled_width * mm / 2)
+            y_593 = y_593_center - (sing1_scaled_height * mm / 2)
 
-            overlay_canvas.drawImage("sing_1.png", x_770, y_770,
-                                   width=sing1_scaled_width*mm, height=sing1_scaled_height*mm,
-                                   mask='auto', preserveAspectRatio=True)
-            
+            overlay_canvas.drawImage("sing_1.png", x_593, y_593,
+                                       width=sing1_scaled_width*mm, height=sing1_scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
+
             overlay_canvas.save()
-            print("🖼️ Добавлены изображения для carta через ReportLab API")
+            print("🖼️ Добавлены изображения для carta через ReportLab API (как в contratto)")
         
         elif template_name == 'contratto':
             # Страница 1 - добавляем company.png и logo.png
@@ -613,10 +667,28 @@ def _add_images_to_pdf(pdf_bytes: bytes, template_name: str) -> BytesIO:
             x_52 = (col_52 * cell_width_mm - 0.5 * cell_width_mm) * mm
             y_52 = (297 - (row_52 * cell_height_mm + cell_height_mm) + 0.5 * cell_height_mm) * mm
             
-            overlay_canvas.drawImage("company.png", x_52, y_52, 
-                                   width=scaled_width*mm, height=scaled_height*mm, 
+            overlay_canvas.drawImage("company.png", x_52, y_52,
+                                   width=scaled_width*mm, height=scaled_height*mm,
                                    mask='auto', preserveAspectRatio=True)
-            
+
+            # Добавляем logo.png (как в contratto)
+            logo_img = Image.open("logo.png")
+            logo_width_mm = logo_img.width * 0.264583
+            logo_height_mm = logo_img.height * 0.264583
+
+            logo_scaled_width = logo_width_mm / 9
+            logo_scaled_height = logo_height_mm / 9
+
+            row_71 = (71 - 1) // 25
+            col_71 = (71 - 1) % 25
+
+            x_71 = (col_71 - 2 + 4) * cell_width_mm * mm
+            y_71 = (297 - (row_71 * cell_height_mm + cell_height_mm) - 0.25 * cell_height_mm) * mm  # поднимаем на 1 клетку
+
+            overlay_canvas.drawImage("logo.png", x_71, y_71,
+                                       width=logo_scaled_width*mm, height=logo_scaled_height*mm,
+                                       mask='auto', preserveAspectRatio=True)
+
             # Нумерация страницы 1
             row_862_p1 = (862 - 1) // 25
             col_862_p1 = (862 - 1) % 25
