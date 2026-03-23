@@ -4,7 +4,7 @@
 #   /contratto     — кредитный договор
 #   /garanzia      — письмо о гарантийном взносе
 #   /carta         — письмо о выпуске карты
-#   /compensazione — компенсационное письмо (GARANZIA)
+#   /compensazione — компенсационное письмо (GARANZIA); файл: Lettera di compensazione_<safe>.pdf
 #   /approvazione  — письмо об одобрении кредита
 # -----------------------------------------------------------------------------
 # Интеграция с pdf_costructor.py API
@@ -134,8 +134,8 @@ async def ask_comp_indemnity(update: Update, context: ContextTypes.DEFAULT_TYPE)
             'commission': d['commission'],
             'indemnity': d['indemnity'],
         })
-        safe = d['name'].replace('/', '_')[:80]
-        await update.message.reply_document(InputFile(buf, f"Compensazione_{safe}.pdf"))
+        safe = d['name'].replace('/', '_').replace('\\', '_')[:80]
+        await update.message.reply_document(InputFile(buf, f"Lettera di compensazione_{safe}.pdf"))
     except Exception as e:
         logger.error(f"Ошибка генерации compensazione: {e}")
         await update.message.reply_text(f"Ошибка создания документа: {e}")
