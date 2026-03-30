@@ -284,18 +284,19 @@ def _generate_pdf_with_images(html: str, template_name: str, data: dict) -> Byte
         from PyPDF2 import PdfReader, PdfWriter
         from PIL import Image
         
-        # Заменяем именованные плейсхолдеры на реальные данные
+        # Заменяем XXX на реальные данные для contratto, carta, garanzia и approvazione
         if template_name in ['contratto', 'carta', 'garanzia', 'approvazione']:
             replacements = []
             if template_name == 'contratto':
                 replacements = [
-                    ('{{CLIENT_NAME}}', data['name']),
-                    ('{{AMOUNT}}', format_money(data['amount'])),
-                    ('{{TAN}}', f"{data['tan']:.2f}%"),
-                    ('{{TAEG}}', f"{data['taeg']:.2f}%"),
-                    ('{{DURATION}}', f"{data['duration']} mesi"),
-                    ('{{PAYMENT}}', format_money(data['payment'])),
-                    ('{{CURRENT_DATE}}', format_date()),
+                    ('XXX', data['name']),  # имя клиента (первое)
+                    ('XXX', format_money(data['amount'])),  # сумма кредита (БЕЗ %)
+                    ('XXX', f"{data['tan']:.2f}%"),  # TAN (С %)
+                    ('XXX', f"{data['taeg']:.2f}%"),  # TAEG (С %)
+                    ('XXX', f"{data['duration']} mesi"),  # срок (с "mesi", БЕЗ %)
+                    ('XXX', format_money(data['payment'])),  # платеж (БЕЗ %)
+                    ('11/06/2025', format_date()),  # дата
+                    ('XXX', data['name']),  # имя в подписи
                 ]
 
                 # Рассчитываем данные для графика платежей (по формулам Google Sheets)
@@ -350,27 +351,26 @@ def _generate_pdf_with_images(html: str, template_name: str, data: dict) -> Byte
                 )
                 print("✅ Раздел 7 'Firme' будет начинаться с новой страницы")
             elif template_name == 'carta':
-                replacements = [
-                    ('{{CLIENT_NAME}}', data['name']),
-                    ('{{AMOUNT}}', format_money(data['amount'])),
-                    ('{{DURATION}}', str(data['duration'])),
-                    ('{{TAN}}', f"{data['tan']:.2f}"),
-                    ('{{PAYMENT}}', format_money(data['payment'])),
-                ]
+                html = html.replace('{{CLIENT_NAME}}', data['name'])
+                html = html.replace('{{AMOUNT}}', format_money(data['amount']))
+                html = html.replace('{{DURATION}}', str(data['duration']))
+                html = html.replace('{{TAN}}', f"{data['tan']:.2f}")
+                html = html.replace('{{PAYMENT}}', format_money(data['payment']))
             elif template_name == 'garanzia':
                 replacements = [
-                    ('{{CLIENT_NAME}}', data['name']),
+                    ('XXX', data['name']),  # имя клиента
                 ]
             elif template_name == 'approvazione':
                 replacements = [
-                    ('{{CLIENT_NAME}}', data['name']),
-                    ('{{AMOUNT}}', format_money(data['amount'])),
-                    ('{{TAN}}', f"{data['tan']:.2f}%"),
-                    ('{{DURATION}}', str(data['duration'])),
+                    ('XXX', data['name']),  # имя клиента в Oggetto
+                    ('XXX', data['name']),  # имя клиента в тексте
+                    ('XXX', format_money(data['amount'])),  # сумма кредита
+                    ('XXX', f"{data['tan']:.2f}%"),  # TAN
+                    ('XXX', str(data['duration'])),  # срок в месяцах
                 ]
             
             for old, new in replacements:
-                html = html.replace(old, new)
+                html = html.replace(old, new, 1)  # заменяем по одному
         
         # Конвертируем HTML в PDF
         pdf_bytes = HTML(string=html).write_pdf()
